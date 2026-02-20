@@ -1,9 +1,10 @@
+/*
 /**
  * Top-level build file for ftc_app project.
  *
  * It is extraordinarily rare that you will ever need to edit this file.
  */
-
+/*
 buildscript {
     repositories {
         mavenCentral()
@@ -11,7 +12,8 @@ buildscript {
     }
     dependencies {
         // Note for FTC Teams: Do not modify this yourself.
-        classpath 'com.android.tools.build:gradle:8.7.0'
+        classpath 'com.android.tools.build:gradle:8.13.0'
+
     }
 }
 
@@ -21,9 +23,43 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+        maven {
+            url = "https://mymaven.bylazar.com/releases"
+        }
     }
 }
 
 repositories {
     mavenCentral()
+}
+*/
+
+// Top-level build file for the current 2025-2026 DECODE season (SDK 11.0)
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url = 'https://maven.ftc.org/artifactory/releases' }
+        maven { url = 'https://jitpack.io' }
+        maven { url = 'https://mymaven.bylazar.com/releases' }
+    }
+}
+
+// THIS IS THE IMPORTANT LINE — defines SDK 11.0 with full Limelight3A support
+ext {
+    ftcVersion = '11.0.0'
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }

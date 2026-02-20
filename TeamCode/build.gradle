@@ -1,4 +1,6 @@
-//
+dependencies {
+    //implementation 'androidx.xr.runtime:runtime:1.0.0-alpha09'
+}//
 // build.gradle in TeamCode
 //
 // Most of the definitions for building your module reside in a common, shared
@@ -15,14 +17,43 @@
 apply from: '../build.common.gradle'
 apply from: '../build.dependencies.gradle'
 
-android {
+/*android {
     namespace = 'org.firstinspires.ftc.teamcode'
-
-    packagingOptions {
-        jniLibs.useLegacyPackaging true
+    compileSdk 35
+    defaultConfig {
+        minSdk 24
     }
-}
+    */
+android {
+    compileSdk 36
 
-dependencies {
-    implementation project(':FtcRobotController')
+    namespace 'org.firstinspires.ftc.teamcode'
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 33
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+
+        packagingOptions {
+            jniLibs {
+                pickFirsts += ['**/*.so']
+            }
+            jniLibs.useLegacyPackaging true
+        }
+
+    }
+    dependencies {
+        implementation project(':FtcRobotController')
+        // your other dependencies (EasyOpenCV, RoadRunner, etc.) stay here
+
+        // implementation "org.firstinspires.ftc:Hardware:${ftcVersion}"
+        //implementation "org.firstinspires.ftc:LimelightVision:${ftcVersion}"
+        //implementation "org.firstinspires.ftc:Hardware:${ftcVersion}"
+        implementation "org.firstinspires.ftc:Hardware:11.0.0"
+    }
+
 }
