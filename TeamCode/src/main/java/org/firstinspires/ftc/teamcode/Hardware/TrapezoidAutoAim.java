@@ -28,7 +28,7 @@ public class TrapezoidAutoAim {
     public HardwareMap hardwareMap = null;
     public ElapsedTime runtime = new ElapsedTime();
     public boolean PrimitiveDriver = false;
-    public double YawDif = 72;
+    public double YawDif = 72 * 0.125;
 
     public void init(){
 
@@ -46,27 +46,6 @@ public class TrapezoidAutoAim {
     public void loop(){
         //runtime.log("Position");
         //limey.getTx();
-
-        if(limey == null) return;
-
-        if(CommonLogic.inRange(limey.getTagAngle(), 12.25,11.25)){
-            YawDif = 7;
-        }else
-        if(CommonLogic.inRange(limey.getTagAngle(), -12.25,11.25)){
-            YawDif = -7;
-        }else
-        if(CommonLogic.inRange(limey.getTagAngle(), 33.75,10.25)){
-            YawDif = 14;
-        }else
-        if(CommonLogic.inRange(limey.getTagAngle(), -33.75,10.25)){
-            YawDif = -14;
-        }else if(CommonLogic.inRange(limey.getTagAngle(), 0,0.99)){
-            YawDif = 0;
-        }else {
-
-        }
-
-
 
         if(PrimitiveDriver == false) {
             if (CurrentTurretColor == TurretColor.Red) {

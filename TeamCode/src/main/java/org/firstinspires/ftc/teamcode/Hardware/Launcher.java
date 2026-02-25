@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware;
-
+/*
 import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.Configurable;          aaaaaaaaaa
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+
+ */
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Common.CommonLogic;
 /**
  * Base class for FTC Team 8492 defined hardware
  */
-@Configurable
+//@Configurable
 public class Launcher extends BaseHardware{
 
 
@@ -27,7 +29,7 @@ public class Launcher extends BaseHardware{
      * driver station on a regular, periodic basis.
      */
     public Telemetry telemetry = null;
-    private TelemetryManager telemetryMU;
+    //private TelemetryManager telemetryMU;                             aaaaaaaaaaaaaaaaa
     public HardwareMap hardwareMap = null; // will be set in Child class
 
 
@@ -110,8 +112,8 @@ public class Launcher extends BaseHardware{
         LaunchM01.setDirection(DcMotorSimple.Direction.REVERSE);
         LaunchM02.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        telemetryMU = PanelsTelemetry.INSTANCE.getTelemetry();
-        PanelsConfigurables.INSTANCE.refreshClass(this);
+       // telemetryMU = PanelsTelemetry.INSTANCE.getTelemetry();           aaaaaaaaaaaaaaaaaaaaaaaa
+       // PanelsConfigurables.INSTANCE.refreshClass(this);               aaaaaaaaaaaaaaa
     }
 
     /**

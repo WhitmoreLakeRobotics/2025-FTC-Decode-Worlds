@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Limey;
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Field.DecodeField;
 
-public class DecodeSubsystem  {
+public class DecodeSubsystem extends OpMode {
 
     private Limey limey;
     private DriveTrain driveTrain;
@@ -28,9 +29,15 @@ public class DecodeSubsystem  {
 
     }
 
-    public void init_loop(){}
+    @Override
+    public void init_loop(){
+        //f
+    }
 
-    public void start(){}
+    @Override
+    public void start(){
+        //f
+    }
 
 
     public void setDependencies (Limey limey, DriveTrain drivetrain){
@@ -39,6 +46,7 @@ public class DecodeSubsystem  {
         this.driveTrain = drivetrain;
     }
 
+    @Override
     public void loop(){
 
         if(limey == null || driveTrain == null) return;
@@ -60,7 +68,10 @@ public class DecodeSubsystem  {
         telemetry.addData("Robot Heading",robotHeadingDeg);
     }
 
-    public void stop(){}
+    @Override
+    public void stop(){
+        //f
+    }
 
 
 }

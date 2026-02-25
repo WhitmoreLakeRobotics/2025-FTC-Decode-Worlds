@@ -6,10 +6,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Common.CommonLogic;
 import org.firstinspires.ftc.teamcode.Common.Settings;
 import org.firstinspires.ftc.teamcode.Hardware.Robot;
+/*
 import com.bylazar.configurables.PanelsConfigurables;
-import com.bylazar.configurables.annotations.Configurable;
+import com.bylazar.configurables.annotations.Configurable;            aaaaaaaaaaaaaaaaaaaaaaaaaa
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
+
+ */
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
@@ -32,7 +35,7 @@ public class ppTeleop extends OpMode {
     public static Pose startingPose; //See ExampleAuto to understand how to use this
     private boolean automatedDrive;
     //private Supplier Teleoppath pathChain;
-    private TelemetryManager telemetryM;
+    //private TelemetryManager telemetryM;                                   aaaaaaaaaaaaaaaa
     private boolean slowMode = false;
     private double slowModeMultiplier = 0.5;
 
@@ -269,12 +272,12 @@ public class ppTeleop extends OpMode {
 
         if (CommonLogic.oneShot(gamepad1.dpad_up, gp1_prev_dpad_up)) {
             if(uppiesInhibitor.seconds() >= 100 || UppiesOverrideEnabled){
-                robot.uppies.cmdUp();
+                //robot.uppies.cmdUp();
             }
 
         }
         if(CommonLogic.oneShotRelease(gamepad1.dpad_up, gp1_prev_dpad_up)){
-            robot.uppies.cmdStop();
+            //robot.uppies.cmdStop();
         }
 
         if (CommonLogic.oneShot(gamepad1.dpad_left, gp1_prev_dpad_left)) {
@@ -283,12 +286,12 @@ public class ppTeleop extends OpMode {
 
         if (CommonLogic.oneShot(gamepad1.dpad_down, gp1_prev_dpad_down)) {
             if(uppiesInhibitor.seconds() >= 100 || UppiesOverrideEnabled){
-                robot.uppies.cmdDown();
+                //robot.uppies.cmdDown();
             }
 
         }
         if(CommonLogic.oneShotRelease(gamepad1.dpad_down, gp1_prev_dpad_down)){
-            robot.uppies.cmdStop();
+            //robot.uppies.cmdStop();
         }
 
         //***********   Gamepad 2 controls ********

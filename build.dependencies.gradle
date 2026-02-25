@@ -22,7 +22,7 @@ dependencies {
     implementation 'com.pedropathing:telemetry:1.0.0'
     implementation 'com.bylazar:fullpanels:1.0.11'
     implementation 'dev.nextftc.extensions:pedro:1.0.0'
-    implementation 'com.acmerobotics.roadruner:ftc: 1.0.0'
+   // implementation 'com.acmerobotics.roadruner:ftc: 1.0.0'
 
     // These are the important ones for Limelight
     //implementation 'com.qualcomm.hardware.limelightvision:limelightlib:1.0.2'
