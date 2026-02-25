@@ -17,7 +17,7 @@ public class Robot extends BaseHardware {
     public DriveTrain driveTrain;
     public Intake intake;
     public Launcher launcher;
-    public Uppies uppies;
+    //public Uppies uppies;
     public TransitionRoller transitionRoller;
     public LauncherBlocker launcherBlocker;
     public Limey limey;
@@ -25,6 +25,7 @@ public class Robot extends BaseHardware {
     public Turret turret;
     public AutoAim autoAim;
     public TrapezoidAutoAim trapezoidAutoAim;
+    public DecodeSubsystem decodeSubsystem;
 
     private Follower follower;
     public static Pose startingPose; //See ExampleAuto to understand how to use this
@@ -85,10 +86,11 @@ public class Robot extends BaseHardware {
         limey.setTelemetry(telemetry);
         limey.init();
 
-        uppies = new Uppies();
-        uppies.hardwareMap = this.hardwareMap;
-        uppies.telemetry = this.telemetry;
-        uppies.init();
+        decodeSubsystem = new DecodeSubsystem();
+        decodeSubsystem.hardwareMap = this.hardwareMap;
+        decodeSubsystem.telemetry = this.telemetry;
+        decodeSubsystem.setDependencies(limey,driveTrain);
+        decodeSubsystem.init();
 
         autoRPM = new AutoRPM(limey, launcher);
         autoRPM.hardwareMap = this.hardwareMap;
@@ -117,8 +119,8 @@ public class Robot extends BaseHardware {
         launcher.init_loop();
         launcherBlocker.init_loop();
         transitionRoller.init_loop();
+        decodeSubsystem.init_loop();
         limey.init_loop();
-        uppies.init_loop();
         autoRPM.init_loop();
         turret.init_loop();
         trapezoidAutoAim.init_loop();
@@ -133,8 +135,8 @@ public class Robot extends BaseHardware {
         launcher.start();
         launcherBlocker.start();
         transitionRoller.start();
+        decodeSubsystem.start();
         limey.start();
-        uppies.start();
         autoRPM.start();
         turret.start();
         trapezoidAutoAim.start();
@@ -151,8 +153,8 @@ public class Robot extends BaseHardware {
         launcher.loop();
         launcherBlocker.loop();
         transitionRoller.loop();
+        decodeSubsystem.loop();
         limey.loop();
-        uppies.loop();
         autoRPM.loop();
         turret.loop();
         trapezoidAutoAim.loop();
@@ -175,7 +177,7 @@ public class Robot extends BaseHardware {
         launcherBlocker.loop();
         transitionRoller.loop();
         limey.loop();
-        uppies.loop();
+
     }
 
     @Override
@@ -187,8 +189,8 @@ public class Robot extends BaseHardware {
         launcher.stop();
         launcherBlocker.stop();
         transitionRoller.stop();
+        decodeSubsystem.stop();
         limey.stop();
-        uppies.stop();
         autoRPM.stop();
         turret.stop();
         trapezoidAutoAim.stop();
