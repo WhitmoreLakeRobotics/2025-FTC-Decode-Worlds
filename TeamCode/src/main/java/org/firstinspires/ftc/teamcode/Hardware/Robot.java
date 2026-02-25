@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-//import com.bylazar.telemetry.TelemetryManager;
+import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;

@@ -9,8 +9,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 
 public class Limey extends BaseHardware {
 
-    public Telemetry telemetry;
-    public HardwareMap hardwareMap;
+    //public Telemetry telemetry;
+    //public HardwareMap hardwareMap;
 
     private Limelight3A limelight;
     private LLResult result;
@@ -154,7 +154,7 @@ public class Limey extends BaseHardware {
         double headingRad = Math.toRadians(robotHeadingDeg);
 
         double dx = tagZ * Math.cos(headingRad) - tagX * Math.sin(headingRad);
-        double dy = tagZ * Math.cos(headingRad) - tagX * Math.sin(headingRad);
+        double dy = tagZ * Math.cos(headingRad) + tagX * Math.sin(headingRad);
 
         double tagFieldX = robotX + dx;
         double tagFieldY = robotY + dy;

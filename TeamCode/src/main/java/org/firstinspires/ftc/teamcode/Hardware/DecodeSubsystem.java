@@ -1,21 +1,11 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Hardware.BaseHardware;
-import org.firstinspires.ftc.teamcode.Hardware.Limey;
-import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Field.DecodeField;
 
-public class DecodeSubsystem extends OpMode {
+public class DecodeSubsystem extends BaseHardware {
 
     private Limey limey;
     private DriveTrain driveTrain;
-
-    public HardwareMap hardwareMap = null;
-    public Telemetry telemetry = null;
 
     public int currentTagID = -1;
     public double tagFieldX = Double.NaN;
@@ -25,36 +15,34 @@ public class DecodeSubsystem extends OpMode {
     public double robotHeadingDeg = 0;
 
     @Override
-    public void init (){
+    public void init() {
+        // nothing needed
+    }
+
+    @Override
+    public void init_loop() {
 
     }
 
     @Override
-    public void init_loop(){
-        //f
+    public void start() {
+
     }
 
-    @Override
-    public void start(){
-        //f
-    }
-
-
-    public void setDependencies (Limey limey, DriveTrain drivetrain){
-
+    public void setDependencies(Limey limey, DriveTrain driveTrain) {
         this.limey = limey;
-        this.driveTrain = drivetrain;
+        this.driveTrain = driveTrain;
     }
 
     @Override
-    public void loop(){
+    public void loop() {
 
-        if(limey == null || driveTrain == null) return;
+        if (limey == null || driveTrain == null) return;
 
         currentTagID = limey.getTagID();
         robotHeadingDeg = driveTrain.getCurrentHeading();
 
-        if(currentTagID == -1){
+        if (currentTagID == -1) {
             tagFieldX = Double.NaN;
             tagFieldY = Double.NaN;
             tagFieldHeadingDegree = Double.NaN;
@@ -65,13 +53,15 @@ public class DecodeSubsystem extends OpMode {
         tagFieldY = DecodeField.getTAGSy(currentTagID);
         tagFieldHeadingDegree = DecodeField.getTAGSHeadingdegree(currentTagID);
 
-        telemetry.addData("Robot Heading",robotHeadingDeg);
+        telemetry.addData("DECODE Tag ID", currentTagID);
+        telemetry.addData("DECODE Tag X", tagFieldX);
+        telemetry.addData("DECODE Tag Y", tagFieldY);
+        telemetry.addData("DECODE Tag Heading", tagFieldHeadingDegree);
+        telemetry.addData("Robot Heading", robotHeadingDeg);
     }
 
     @Override
-    public void stop(){
-        //f
+    void stop() {
+
     }
-
-
 }

@@ -25,18 +25,12 @@ public class DriveTrain extends BaseHardware {
     private DcMotor RDM2 ;
 
     public CommonGyro Gyro = new CommonGyro();
-   // private Vision vision = new Vision();
-    /**
-     * The {@link #telemetry} field contains an object in which a user may accumulate data which
-     * is to be transmitted to the driver station. This data is automatically transmitted to the
-     * driver station on a regular, periodic basis.
-     */
- //   public Telemetry telemetry = null;
-
-    /**
+    // private Vision vision = new Vision();
+    /*
      * Hardware Mappings
      */
-    public HardwareMap hardwareMap = null; // will be set in Child class
+    // public HardwareMap hardwareMap = null; // will be set in Child class
+
     public Mode Current_Mode;
 
     private boolean cmdComplete = true;
@@ -83,17 +77,6 @@ public class DriveTrain extends BaseHardware {
     private SensorSel sensorSelection = SensorSel.UNKNOWN;
     private double lastTurnPower = 0;   // MJD
 
-
-    /**
-     * BaseHardware constructor
-     * <p>
-     * The op mode name should be unique. It will be the name displayed on the driver station. If
-     * multiple op modes have the same name, only one will be available.
-     */
-
-
-
-
     /**
      * User defined init method
      * <p>
@@ -104,9 +87,10 @@ public class DriveTrain extends BaseHardware {
         Gyro.telemetry = telemetry;
         Gyro.hardwareMap = hardwareMap;
         Gyro.init();
-       // vision.telemetry = telemetry;
-        //vision.hardwareMap = hardwareMap;
-        //vision.init();
+
+        // vision.telemetry = telemetry;
+        // vision.hardwareMap = hardwareMap;
+        // vision.init();
 
         RDM1 = hardwareMap.dcMotor.get("RDM1");
         LDM1 = hardwareMap.dcMotor.get("LDM1");
@@ -146,130 +130,79 @@ public class DriveTrain extends BaseHardware {
         RDM1.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         RDM2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-
-
         telemetry.addData("Drive Train", "Initialized");
         Current_Mode = Mode.STOPPED;
+    }
 
-    }
-    /**
-     * User defined init_loop method
-     * <p>
-     * This method will be called repeatedly when the INIT button is pressed.
-     * This method is optional. By default this method takes no action.
-     */
-    public void init_loop() {
-    }
-    /**
-     * User defined start method.
-     * <p>
-     * This method will be called once when the PLAY button is first pressed.
-     * This method is optional. By default this method takes not action.
-     * Example usage: Starting another thread.
-     */
-    public void start() {
-    }
+    public void init_loop() {}
+
+    public void start() {}
+
     /**
      * User defined loop method
      * <p>
      * This method will be called repeatedly in a loop while this op mode is running
      */
     public void loop() {
-       // telemetry.addData("Gyro","Gyro "+Gyro.getGyroHeading());
-       // telemetry.addData("LDM1 CP","LDM1 CP "+LDM1.getCurrentPosition());
-       // telemetry.addData("LDM2 CP","LDM2 CP "+LDM2.getCurrentPosition());
-
-        //telemetry.addData("RDM1 CP","RDM1 CP "+RDM1.getCurrentPosition());
-       // telemetry.addData("RDM2 CP","RDM2 CP "+RDM2.getCurrentPosition());
-
-         // telemetry.addData("Wallaway ",WallEway.getDistance(DistanceUnit.INCH));
-         // telemetry.addData("HumptyDumpty",HumptyDumpty.getDistance(DistanceUnit.INCH));
 
         switch(Current_Mode){
             case TELEOP:
-
                 break;
+
             case STOPPED:
                 stopMotors();
                 cmdComplete = true;
                 break;
-            case COMMAND_AA:
 
+            case COMMAND_AA:
                 break;
+
             case DRIVE_AA:
                 doDrive();
                 break;
+
             case VISION:
                 aprilDrive();
                 break;
+
             case DRIVE_BY_SENSOR:
                 doDriveBySensor(sensorSelection);
                 break;
+
             case COMMAND_TURN:
                 doTurn();
                 break;
-
         }
-
-
     }
-
-
-    /**
-     * User defined stop method
-     * <p>
-     * This method will be called when this op mode is first disabled
-     * <p>
-     * The stop method is optional. By default this method takes no action.
-     */
-   public void stop(){
+    public void stop(){
         Current_Mode = Mode.STOPPED;
         cmdComplete = true;
-       telemetry.addData(TAGChassis,"distance driven " + getPosInches());
+        telemetry.addData(TAGChassis,"distance driven " + getPosInches());
         stopMotors();
-}
+    }
 
     public void cmdTeleOp(double Left_Y, double Left_X, double Right_X, double Current_Speed) {
         cmdComplete = false;
         Current_Mode = Mode.TELEOP;
         double Drive = Left_Y * Current_Speed;
         double Strafe = Left_X * Current_Speed;
-        //double Turn = Right_X * (0.8- Drive) * TURNSPEED_TELEOP ;
         double Turn = Right_X * TURNSPEED_TELEOP;
         double Heading = Gyro.getGyroHeadingRadian();
+
         double NDrive = Strafe * Math.sin(Heading) + Drive * Math.cos(Heading);
         double NStrafe = Strafe * Math.cos(Heading) - Drive * Math.sin(Heading);
-        // Adapted mecanum drive from link below
-        // https://github.com/brandon-gong/ftc-mecanum
 
         LDM1Power = NDrive + NStrafe + Turn;
         RDM1Power = NDrive - NStrafe - Turn;
         LDM2Power = NDrive - NStrafe + Turn;
         RDM2Power = NDrive + NStrafe - Turn;
-/*
-        RobotLog.aa(TAGChassis, "LDM1Power: " + LDM1Power +" LDM2Power: " + LDM2Power
-                + " RDM1Power: " + RDM1Power +" RDM2Power: " + RDM2Power);
-        RobotLog.aa(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-                + " Right_X: " + Right_X + " Heading " + Heading);
-
-        //telemetry.addData(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-        //        + " Right_X: " + Right_X + " Heading " + Heading);
-*/
-
-
-
-
 
         doTeleop();
     }
+
     public double autoTurn(int newHeading){
-       return calcTurn(newHeading);
-
-
+        return calcTurn(newHeading);
     }
-
-
-
 
     public void visDrive(double Left_Y, double Left_X, double Right_X, double Current_Speed) {
         cmdComplete = false;
@@ -278,88 +211,41 @@ public class DriveTrain extends BaseHardware {
         double Strafe = Left_X * Current_Speed;
         double Turn = Right_X * (1.0 -Drive) * TURNSPEED_TELEOP ;
         double Heading = Gyro.getGyroHeadingRadian();
-       // double NDrive = Strafe * Math.sin(Heading) + Drive * Math.cos(Heading);
-        //double NStrafe = Strafe * Math.cos(Heading) - Drive * Math.sin(Heading);
-        // Adapted mecanum drive from link below
-        // https://github.com/brandon-gong/ftc-mecanum
 
         LDM1Power = Drive + Strafe + Turn;
         RDM1Power = Drive - Strafe - Turn;
         LDM2Power = Drive - Strafe + Turn;
         RDM2Power = Drive + Strafe - Turn;
-/*
-        RobotLog.aa(TAGChassis, "LDM1Power: " + LDM1Power +" LDM2Power: " + LDM2Power
-                + " RDM1Power: " + RDM1Power +" RDM2Power: " + RDM2Power);
-        RobotLog.aa(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-                + " Right_X: " + Right_X + " Heading " + Heading);
-
-        telemetry.addData(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-                + " Right_X: " + Right_X + " Heading " + Heading);
-
-*/
-
-
-
 
         doTeleop();
     }
+
     public void doTeleop() {
         Current_Mode = Mode.TELEOP;
-        //Cap the power limit for the wheels
-        double LDM1P = CommonLogic.CapValue(LDM1Power,
-                minPower, maxPower);
 
-        //Cap the power limit for the wheels
-        double LDM2P = CommonLogic.CapValue(LDM2Power,
-                minPower, maxPower);
-
-        double RDM1P = CommonLogic.CapValue(RDM1Power,
-                minPower, maxPower);
-
-        double RDM2P = CommonLogic.CapValue(RDM2Power,
-                minPower, maxPower);
-
-
-
+        double LDM1P = CommonLogic.CapValue(LDM1Power, minPower, maxPower);
+        double LDM2P = CommonLogic.CapValue(LDM2Power, minPower, maxPower);
+        double RDM1P = CommonLogic.CapValue(RDM1Power, minPower, maxPower);
+        double RDM2P = CommonLogic.CapValue(RDM2Power, minPower, maxPower);
 
         LDM1.setPower(LDM1P);
         RDM1.setPower(RDM1P);
         LDM2.setPower(LDM2P);
         RDM2.setPower(RDM2P);
-     /*   RobotLog.aa(TAGChassis, "doTeleop: LDM1Power =" + LDM1P + " RDM1Power =" + RDM1P +
-                " LDM2Power =" + LDM2P + " RDM2Power =" + RDM2P);
-
-        telemetry.addData(TAGChassis, "doTeleop: LDM1Power =" + LDM1P + " RDM1Power =" + RDM1P +
-                " LDM2Power =" + LDM2P + " RDM2Power =" + RDM2P);
-
-      */
     }
-    /*public void setMaxPower(double newMax) {
-
-        this.maxPower = Math.abs(newMax);
-        this.minPower = Math.abs(newMax)* -1;
-    } */
 
     private void scaleMotorPower(){
-        //figure out what was max
         double MaxValue = 0;
-        if (Math.abs(LDM2Power)  > MaxValue){
-            MaxValue = LDM2Power;
-        }
-        if (Math.abs(RDM1Power)  > MaxValue){
-            MaxValue = RDM1Power;
-        }
-        if (Math.abs(RDM2Power)  > MaxValue) {
-            MaxValue = RDM2Power;
-        }
-        if (Math.abs(LDM1Power)  > MaxValue){
-            MaxValue = LDM1Power;
-        }
-        //divide each motor power by max power
+        if (Math.abs(LDM2Power)  > MaxValue) MaxValue = LDM2Power;
+        if (Math.abs(RDM1Power)  > MaxValue) MaxValue = RDM1Power;
+        if (Math.abs(RDM2Power)  > MaxValue) MaxValue = RDM2Power;
+        if (Math.abs(LDM1Power)  > MaxValue) MaxValue = LDM1Power;
+
         if (maxPower > 1) {
             scalePower(MaxValue);
         }
     }
+
     public void updateRange(double leftFrontRange,double rightFrontRange, double leftSideRange,
                             double rightSideRange , double rearRange){
         sensorRange = (leftFrontRange + rightFrontRange + leftSideRange + rightSideRange)/4;
@@ -368,48 +254,37 @@ public class DriveTrain extends BaseHardware {
         sensorRangeLeftSide = leftSideRange;
         sensorRangeRightSide = rightSideRange;
         sensorRangeRear = rearRange;
-
     }
 
-    private  void scalePower(double ScalePower){
+    private void scalePower(double ScalePower){
         LDM1Power=LDM1Power/ScalePower;
         LDM2Power=LDM2Power/ScalePower;
         RDM1Power=RDM1Power/ScalePower;
         RDM2Power=RDM2Power/ScalePower;
-
     }
-    private  void updateMotorPower(){
+
+    private void updateMotorPower(){
         scaleMotorPower();
-        LDM1Power = CommonLogic.CapValue(LDM1Power,
-                Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
 
-        LDM2Power= CommonLogic.CapValue(LDM2Power,
-                Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
-        RDM1Power = CommonLogic.CapValue(RDM1Power,
-                Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
-
-        RDM2Power= CommonLogic.CapValue(RDM2Power,
-                Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
+        LDM1Power = CommonLogic.CapValue(LDM1Power, Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
+        LDM2Power = CommonLogic.CapValue(LDM2Power, Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
+        RDM1Power = CommonLogic.CapValue(RDM1Power, Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
+        RDM2Power = CommonLogic.CapValue(RDM2Power, Settings.REV_MIN_POWER, Settings.REV_MAX_POWER);
 
         LDM1.setPower(LDM1Power);
         LDM2.setPower(LDM2Power);
         RDM1.setPower(RDM1Power);
         RDM2.setPower(RDM2Power);
-
     }
 
     public void CmdDrive(double TargetDist,double Bearing, double speed, int Heading){
-        //drive target needs to account turn distance
-
         Target_Heading = Heading;
-        //disabled turn distance calc
-   // Drive_Target = (TargetDist) + ((Math.abs(Gyro.getGyroHeading() - Target_Heading)*Math.sqrt(2))/turnDistPerDeg);
+
         Drive_Target = TargetDist * Ticks_Per_Inch;
-    // reset encoders
-     resetEncoders();
-        // store Bearing
+
+        resetEncoders();
+
         bearing_AA = Bearing;
-        //store speed
         speed_AA = speed;
 
         cmdComplete = false;
@@ -417,40 +292,26 @@ public class DriveTrain extends BaseHardware {
         startDrive();
     }
 
+    public double calcTurn(int tHeading){
 
+        double current = Gyro.getGyroHeading();
+        double error = tHeading - current;
 
-   /* public double calcTurn(int tHeading){
+        error = ((error + 540) % 360) - 180;
 
-       //double turn = CommonLogic.goToPosStag(Gyro.getGyroHeading(),tHeading, Gyro_Tol,1.0, stagPos, stagPow);
-       double turn = CommonLogic.PIDcalcTurn(stagPos,0.05,Gyro.getGyroHeading(),tHeading);
+        if (Math.abs(error) < 3.0) {
+            lastTurnPower = 0;
+            return 0;
+        }
+
+        double turn = CommonLogic.PIDcalcTurn(stagPos, 0.04, current, tHeading);
+
+        turn = 0.55 * turn + 0.45 * lastTurnPower;
+        lastTurnPower = turn;
+
         telemetry.addData(TAGChassis,"turn power " + turn);
         return turn;
-    }*/
-   public double calcTurn(int tHeading){
-
-       double current = Gyro.getGyroHeading();
-       double error = tHeading - current;
-
-       // Normalize error to [-180, 180]
-       error = ((error + 540) % 360) - 180;
-
-       // MJD — deadband to stop jitter near target
-       if (Math.abs(error) < 3.0) {
-           lastTurnPower = 0;
-           return 0;
-       }
-
-       // Original P controller (tuned gain)
-       double turn = CommonLogic.PIDcalcTurn(stagPos, 0.04, current, tHeading);
-
-       // MJD — smoothing filter to prevent oscillation
-       turn = 0.55 * turn + 0.45 * lastTurnPower;
-       lastTurnPower = turn;
-
-       telemetry.addData(TAGChassis,"turn power " + turn);
-       return turn;
-   }
-
+    }
 
     public void cmdTurn(int newHeading, double speed){
         speed_AA = 0.0;
@@ -466,29 +327,24 @@ public class DriveTrain extends BaseHardware {
         if ( CommonLogic.inRange(Gyro.getGyroHeading(),Target_Heading,Gyro_Tol)  ){
             stopMotors();
             Current_Mode = Mode.STOPPED;
-        }else{
+        } else {
             startDrive();
         }
-
-
     }
-
     public void cmdDriveBySensors(double TargetDist,double Bearing, double speed, int Heading){
         cmdDriveBySensors(TargetDist,Bearing,speed,Heading, SensorSel.LEFT_SIDE);
     }
+
     public void cmdDriveBySensors(double TargetDist,double Bearing, double speed, int Heading,SensorSel sel){
         sensorSelection = sel;
-        //drive target needs to account turn distance
 
         Target_Heading = Heading;
 
-        Drive_Target = (TargetDist); //((Math.abs(Gyro.getGyroHeading() - Target_Heading)*Math.sqrt(2))/turnDistPerDeg);
+        Drive_Target = (TargetDist);
 
-        // reset encoders
         resetEncoders();
-        // store Bearing
+
         bearing_AA = Bearing;
-        //store speed
         speed_AA = speed;
         SensorDrive = speed;
 
@@ -497,131 +353,67 @@ public class DriveTrain extends BaseHardware {
         startDrive();
     }
 
-
     private void startDrive(){
         double Left_Y = Math.cos(Math.toRadians(bearing_AA));
         double Drive = Left_Y * speed_AA;
         double Strafe = Math.sin(Math.toRadians(bearing_AA)) * speed_AA;
         double Turn = calcTurn(Target_Heading) * (0.8 -Drive) * TURNSPEED_TELEOP ;
         double Heading = Gyro.getGyroHeadingRadian();
+
         double NDrive = Strafe * Math.sin(Heading) + Drive * Math.cos(Heading);
         double NStrafe = Strafe * Math.cos(Heading) - Drive * Math.sin(Heading);
-        // Adapted mecanum drive from link below
-        // https://github.com/brandon-gong/ftc-mecanum
 
         LDM1Power = NDrive + NStrafe + Turn;
         RDM1Power = NDrive - NStrafe - Turn;
         LDM2Power = NDrive - NStrafe + Turn;
         RDM2Power = NDrive + NStrafe - Turn;
 
-       /* RobotLog.aa(TAGChassis, "LDM1Power: " + LDM1Power +" LDM2Power: " + LDM2Power
-           //     + " RDM1Power: " + RDM1Power +" RDM2Power: " + RDM2Power);
-        RobotLog.aa(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-                + " Right_X: " + Right_X + " Heading " + Heading);
-
-        telemetry.addData(TAGChassis, "Left_X: " + Left_X +" Left_Y: " + Left_Y
-                + " Right_X: " + Right_X + " Heading " + Heading);
-
-        */
-
-        //Cap the power limit for the wheels
-      scaleMotorPower();
-       /* double LDM1P = CommonLogic.CapValue(LDM1Power,
-                minPower, maxPower);
-
-        //Cap the power limit for the wheels
-        double LDM2P = CommonLogic.CapValue(LDM2Power,
-                minPower, maxPower);
-
-        double RDM1P = CommonLogic.CapValue(RDM1Power,
-                minPower, maxPower);
-
-        double RDM2P = CommonLogic.CapValue(RDM2Power,
-                minPower, maxPower);
-
-
-        */
-
-
+        scaleMotorPower();
 
         LDM1.setPower(LDM1Power);
         RDM1.setPower(RDM1Power);
         LDM2.setPower(LDM2Power);
         RDM2.setPower(RDM2Power);
-      /*  RobotLog.aa(TAGChassis, "doTeleop: LDM1Power =" + LDM1Power + " RDM1Power =" + RDM1Power +
-                " LDM2Power =" + LDM2Power + " RDM2Power =" + RDM2Power);
-
-        telemetry.addData(TAGChassis, "doTeleop: LDM1Power =" + LDM1Power + " RDM1Power =" + RDM1Power +
-                " LDM2Power =" + LDM2Power + " RDM2Power =" + RDM2Power);
-                */
-
-
     }
+
     private void doDrive(){
         double distance = getPosInTicks();
 
-    //check to see if we have driven the target distance
-    if(Drive_Target <= distance) {
-        //if we have reached our target distance
-        //stop drive
-        stopMotors();
-        //mark command complete
-            cmdComplete = true;
-        //set current mode stop
-        Current_Mode = Mode.STOPPED;
-    }
-    else {
-        telemetry.addData(TAGChassis,"distance driven " + getPosInches());
-        startDrive();
-    }
-
-
-        //if not keep driving
-
-    }
-
-    private void doDriveBySensor(SensorSel sel  ){
-       // double distance = sensorRange;
-        // update speed_aa ;
-        //speed_AA = (CommonLogic.goToPosStag(GetSensorRange(sel), Drive_Target,sensorTol,SensorDrive,stagPos,stagPow));
-        speed_AA = (CommonLogic.PIDcalc(6.5, 0,GetSensorRange(sel),Drive_Target));
-        //telemetry.addData(TAGChassis,"sensor range " + sensorRange);
-        //telemetry.addData(TAGChassis,"drive target " + Drive_Target);
-        startDrive();
-        //check to see if we have driven the target distance
-        //if (sensorRange < Drive_Target) {
-        if(CommonLogic.inRange(GetSensorRange(sel),Drive_Target,sensorTol)) {
-            //telemetry.addData(TAGChassis,"drive by sensor in range ");
-            //if we have reached our target distance
-            //stop drive
+        if(Drive_Target <= distance) {
             stopMotors();
-            //mark command complete
             cmdComplete = true;
-            //set current mode stop
             Current_Mode = Mode.STOPPED;
         }
+        else {
+            telemetry.addData(TAGChassis,"distance driven " + getPosInches());
+            startDrive();
+        }
+    }
 
-        //if not keep driving
+    private void doDriveBySensor(SensorSel sel){
+        speed_AA = (CommonLogic.PIDcalc(6.5, 0,GetSensorRange(sel),Drive_Target));
 
+        startDrive();
+
+        if(CommonLogic.inRange(GetSensorRange(sel),Drive_Target,sensorTol)) {
+            stopMotors();
+            cmdComplete = true;
+            Current_Mode = Mode.STOPPED;
+        }
     }
 
     private double GetSensorRange(SensorSel sel){
         double range = 0.0;
         switch (sel){
             case BOTH:
-                range = Math.min(sensorRangeRightFront,sensorRangeLeftFront); //(sensorRangeRightFront+ sensorRangeLeftFront)/2;
+                range = Math.min(sensorRangeRightFront,sensorRangeLeftFront);
                 break;
             case RIGHT_FRONT:
-                //range = sensorRangeRightFront;
-
                 break;
             case LEFT_FRONT:
                 range = sensorRangeLeftFront;
                 break;
             case LEFT_SIDE:
-
-               // CommonLogic.CapValue(WallEway.getDistance(DistanceUnit.INCH),0,80);
-               // range = WallEway.getDistance(DistanceUnit.INCH);
                 break;
             case RIGHT_SIDE:
                 range = sensorRangeRightSide;
@@ -633,17 +425,8 @@ public class DriveTrain extends BaseHardware {
                 range = sensorRange;
                 break;
         }
-
-
-
         return range;
-
     }
-
-
-
-
-
 
     private void resetEncoders(){
         LDM1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -655,10 +438,8 @@ public class DriveTrain extends BaseHardware {
         LDM2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RDM1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         RDM2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
-
     }
+
     private double getPosInches(){
         double values = Math.abs(LDM1.getCurrentPosition());
         values += Math.abs(LDM2.getCurrentPosition());
@@ -669,8 +450,8 @@ public class DriveTrain extends BaseHardware {
         values = values/Ticks_Per_Inch;
 
         return values;
-
     }
+
     private double getPosInTicks(){
         double values = Math.abs(LDM1.getCurrentPosition());
         values += Math.abs(LDM2.getCurrentPosition());
@@ -680,12 +461,10 @@ public class DriveTrain extends BaseHardware {
 
         return values;
     }
-
     public void QuickAligenment() {
-   //The intention of this method is to return a turn value based upon a desired alingment direction
+        //The intention of this method is to return a turn value based upon a desired alingment direction
         //this should override the right joystick
     }
-
     private void stopMotors(){
         LDM1.setPower(0);
         LDM2.setPower(0);
@@ -694,32 +473,21 @@ public class DriveTrain extends BaseHardware {
     }
 
     public void ResetGyro(){
-        //Gyro.GyroInt();
         Gyro.imu.resetYaw();
-
-    }
-
-    public int getCurrentHeading(){
-        return Gyro.gyroHeading_Current;
     }
 
     public boolean getCmdComplete(){
-
-
         return cmdComplete;
     }
 
     public boolean isBusy() {
-
         return cmdComplete;
-
     }
 
     public void aprilDrive(){
         /*if (vision.getDesiredTag_staleTime_mSec() < visionThreshHold){
-
         }
-*/
+        */
     }
 
     public enum SensorSel{
@@ -730,9 +498,7 @@ public class DriveTrain extends BaseHardware {
         BOTH,
         REAR,
         UNKNOWN;
-
     }
-
 
     public enum Mode{
         DRIVE_AA,
@@ -742,7 +508,17 @@ public class DriveTrain extends BaseHardware {
         TELEOP,
         DRIVE_BY_SENSOR,
         VISION;
+    }
+    // Returns robot heading in DEGREES, CCW positive, normalized to 0–360  // MJD
+    public double getCurrentHeadingDeg() {                                  // MJD
+        double heading = Gyro.getGyroHeading();      // IMU yaw in degrees   // MJD
+        heading = (heading % 360 + 360) % 360;       // normalize 0–360      // MJD
+        return heading;                                                     // MJD
+    }
+
+    // Legacy method preserved for compatibility, now wraps the new one      // MJD
+    public int getCurrentHeading() {                                        // MJD
+        return (int) getCurrentHeadingDeg();                                // MJD
+    }
 
 }
-}
-
